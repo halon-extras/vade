@@ -24,13 +24,8 @@ class Vade
 		return json_decode($result)["ping"];
 	}
 
-	function scan($fp)
+	function scan($fp, $senderip, $senderhelo, $sender, $recipients)
 	{
-		global $senderip;
-		global $senderhelo;
-		global $sender;
-		global $recipients;
-
 		$conn = $socket = Socket(Socket::AF($this->host), "SOCK_STREAM");
 		if (!$socket->settimeout($this->timeout)) return ["error" => "Failed to set timeout"];
 		if (!$socket->connect($this->host, $this->port)) return ["error" => "Failed to connect"];
@@ -57,7 +52,7 @@ class Vade
 		];
 
 		foreach ($recipients as $rcpt) {
-			$headers[] = "X-Rcptto: $rcpt";
+			$headers[] = "X-Rcptto: ".$rcpt["recipient"];
 		}
 
 		if (!$socket->send(implode("\r\n", $headers)."\r\n\r\n")) return ["error" => "An error occurred when sending data"];

@@ -20,13 +20,17 @@ The following options are available in the **tls** array.
 - enabled `boolean` - Enable TLS for the specific socket
 - opts `array` - All available options can be found on [here](http://docs.halon.se/hsl/functions.html?highlight=tlssocket#TLSSocket)
 
-## scan(fp)
+## scan(fp, senderip, senderhelo, sender, recipients)
 
 Scans a message
 
 **Params**
 
 - fp `File` - file object such as return type of [toFile()](https://docs.halon.io/hsl/functions.html#MailMessage.toFile). **Required**.
+- senderip `string` - IP-address of the sender
+- senderhelo `string` - The HELO of the sender
+- sender `string` - The envelope sender
+- recipients `array` - The [pre-defined](https://docs.halon.io/hsl/eodonce.html#transaction) `$transaction["recipients"]` object
 
 **Returns**: associative array containing the result of the scan
 
@@ -40,12 +44,12 @@ Pings the Vade's service to check if it's responding
 
 ## Example
 
-```java
+```
 include "vade";
 
 $vade = Vade("172.16.78.25", ["port" => 8080, "tls" => ["enabled" => true]]);
-$fp = $arguments["mail"]->toFile(); // Or use "GetMailMessage()->toFile();" in a EOD "Per recipient" script
-$result = $vade->scan($fp);
+$fp = $arguments["mail"]->toFile();
+$result = $vade->scan($fp, $connection["remoteip"], $connection["helo"]["host"], $transaction["sender"], $transaction["recipients"]);
 
 if (!$result["error"]) {
     echo $result;
