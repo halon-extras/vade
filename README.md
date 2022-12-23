@@ -45,7 +45,7 @@ Pings the Vade's service to check if it's responding
 ## Example
 
 ```
-include "vade";
+import { Vade } from "vade";
 
 $vade = Vade("172.16.78.25", ["port" => 8080, "tls" => ["enabled" => true]]);
 $fp = $arguments["mail"]->toFile();
